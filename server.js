@@ -11,23 +11,20 @@ const ejsMate = require("ejs-mate");
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
 const User = require("./models/User.js");
-// const connectDB = require('./config/db');
 
-// dotenv.config(); // Load environment variables
+// Load environment variables
+dotenv.config();
 
-const MONGO_URL = "mongodb://127.0.0.1:27017/homeService";
-
-main()
-  .then(() => {
-    console.log("connected to DB");
-  })
-  .catch((err) => {
-    console.log(err);
-  });
+const MONGO_URL = process.env.MONGO_URL || "mongodb://127.0.0.1:27017/homeService";
 
 async function main() {
   await mongoose.connect(MONGO_URL);
+  console.log("connected to DB");
 }
+
+main().catch((err) => {
+  console.log(err);
+});
 
 app.use(express.json()); // Parse incoming JSON requests
 app.set("view engine", "ejs");
@@ -36,41 +33,32 @@ app.use(express.urlencoded({ extended: true }));
 app.engine("ejs", ejsMate);
 app.use(express.static(path.join(__dirname, "/public")));
 
-const serviceRoutes = require('./routes/serviceRoutes');
-const userRoutes = require('./routes/userRoutes');
-const contactRoutes = require('./routes/contactRoutes.js');
-
-//MongoStore
+// MongoStore
 const store = MongoStore.create({
   mongoUrl: MONGO_URL,
   crypto: {
-    secret: "mysupersecretcode",
+    secret: process.env.SESSION_SECRET || "mysupersecretcode",
   },
-  touchAfter: 24 * 3600,  //24 hours in sec
+  touchAfter: 24 * 3600,  // 24 hours in sec
 });
 
-
-//Express Session
+// Express Session
 const sessionOptions = {
   store,
-  secret: "mysupersecretcode",
+  secret: process.env.SESSION_SECRET || "mysupersecretcode",
   resave: false,
   saveUninitialized: true,
   cookie: {
-    expires: Date.now() + 7 * 24 * 60 * 60 * 1000, //milliseconds in 7 days
+    expires: Date.now() + 7 * 24 * 60 * 60 * 1000, // milliseconds in 7 days
     maxAge: 7 * 24 * 60 * 60 * 1000,
     httpOnly: true,
   },
 };
 
-
-// // Connect to MongoDB
-// connectDB();
-
 app.use(session(sessionOptions));
 app.use(flash());
 
-//Passport
+// Passport
 app.use(passport.initialize());
 app.use(passport.session());
 passport.use(new LocalStrategy(User.authenticate()));
@@ -85,8 +73,11 @@ app.use((req, res, next) => {
   next();
 });
 
-
 // API routes
+const serviceRoutes = require('./routes/serviceRoutes');
+const userRoutes = require('./routes/userRoutes');
+const contactRoutes = require('./routes/contactRoutes.js');
+
 app.use('/api/services', serviceRoutes);
 app.use('/api', userRoutes);
 app.use('/api/services/contact', contactRoutes);

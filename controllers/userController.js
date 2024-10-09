@@ -20,7 +20,7 @@ module.exports.signup = async (req, res) => {
     });
   } catch (err) {
     console.error(error);
-    res.redirect("/signup");
+    res.redirect("/api/services/signup");
   }
 };
 
