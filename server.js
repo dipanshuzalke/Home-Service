@@ -4,27 +4,16 @@ const dotenv = require('dotenv');
 const path = require("path");
 const mongoose = require('mongoose');
 const ExpressError = require("./utils/ExpressError.js");
+const MongoStore = require('connect-mongo');
+const session = require("express-session");
+const flash = require("connect-flash");
 const ejsMate = require("ejs-mate");
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
 const User = require("./models/User.js");
-const session = require("express-session");
-const flash = require("connect-flash");
-const MongoStore = require('connect-mongo');
 // const connectDB = require('./config/db');
 
 // dotenv.config(); // Load environment variables
-
-app.use(express.json()); // Parse incoming JSON requests
-app.set("view engine", "ejs");
-app.set("views", path.join(__dirname, "views"));
-app.use(express.urlencoded({ extended: true }));
-app.engine("ejs", ejsMate);
-app.use(express.static(path.join(__dirname, "/public")));
-
-const serviceRoutes = require('./routes/serviceRoutes');
-const userRoutes = require('./routes/userRoutes');
-const contactRoutes = require('./routes/contactRoutes.js');
 
 const MONGO_URL = "mongodb://127.0.0.1:27017/homeService";
 
@@ -39,6 +28,17 @@ main()
 async function main() {
   await mongoose.connect(MONGO_URL);
 }
+
+app.use(express.json()); // Parse incoming JSON requests
+app.set("view engine", "ejs");
+app.set("views", path.join(__dirname, "views"));
+app.use(express.urlencoded({ extended: true }));
+app.engine("ejs", ejsMate);
+app.use(express.static(path.join(__dirname, "/public")));
+
+const serviceRoutes = require('./routes/serviceRoutes');
+const userRoutes = require('./routes/userRoutes');
+const contactRoutes = require('./routes/contactRoutes.js');
 
 //MongoStore
 const store = MongoStore.create({
@@ -67,11 +67,6 @@ const sessionOptions = {
 // // Connect to MongoDB
 // connectDB();
 
-// API routes
-app.use('/api/services', serviceRoutes);
-app.use('/api', userRoutes);
-app.use('/api/services/contact', contactRoutes);
-
 app.use(session(sessionOptions));
 app.use(flash());
 
@@ -89,6 +84,12 @@ app.use((req, res, next) => {
   res.locals.currUser = req.user;
   next();
 });
+
+
+// API routes
+app.use('/api/services', serviceRoutes);
+app.use('/api', userRoutes);
+app.use('/api/services/contact', contactRoutes);
 
 // Homepage route
 app.get('/api/services', (req, res) => {

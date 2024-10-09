@@ -16,7 +16,7 @@ module.exports.signup = async (req, res) => {
       if (err) {
         return next(err);
       }
-      res.redirect("/");
+      res.redirect("/api/services");
     });
   } catch (err) {
     console.error(error);
@@ -38,6 +38,6 @@ module.exports.logout = (req, res, next) => {
     if (err) {
       return next(err);
     }
-    res.redirect("/");
+    res.redirect("/api/services");
   });
 };
