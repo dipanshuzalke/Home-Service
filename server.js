@@ -83,7 +83,7 @@ const serviceRoutes = require('./routes/serviceRoutes');
 const userRoutes = require('./routes/userRoutes');
 const contactRoutes = require('./routes/contactRoutes.js');
 
-app.use('/api/login', userRoutes);
+app.use('/api', userRoutes);
 app.use('/api/services', serviceRoutes);
 app.use('/api/services/contact', contactRoutes);
 
