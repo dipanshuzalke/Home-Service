@@ -7,8 +7,13 @@
     <li><a href="#about">About</a></li>
     <li><a href="#services">Services</a></li>
     <li><a href="#contact">Contact Us</a></li>
+    <% if(!currUser) {%>
     <button><a href="/api/login" style="color: #fff;">Login</a></button>
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
     <button><a href="/api/signup" style="color: #fff;">Sign up</a></button>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <% }else { %>
+    <button><a href="/api/logout" style="color: #fff;">logout</a></button>
+    <% } %>
   </ul>
 </nav>

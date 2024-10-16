@@ -18,3 +18,13 @@ module.exports.saveRedirectUrl = (req, res, next) => {
   }
   next();
 };
+
+module.exports.currentUserMiddleware = async (req, res, next) => {
+  if (req.user) {
+    // Do something with the current user
+    console.log(`Current user: ${req.user.username}`);
+  } else {
+    console.log("No user logged in");
+  }
+  next();
+};

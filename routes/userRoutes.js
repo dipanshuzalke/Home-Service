@@ -21,6 +21,7 @@ router.route("/login")
   }),
   userController.login
 );
+// router.get("/user", userController.someRoute)
 
 router.get("/logout", userController.logout);
 

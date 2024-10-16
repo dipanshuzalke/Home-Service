@@ -20,7 +20,7 @@ module.exports.signup = async (req, res) => {
     });
   } catch (err) {
     console.error(error);
-    res.redirect("/api/services/signup");
+    res.redirect("/api/signup");
   }
 };
 
@@ -29,7 +29,7 @@ module.exports.renderLoginForm = (req, res) => {
 };
 
 module.exports.login = async (req, res) => {
-  let redirectUrl = res.locals.redirectUrl || "/";
+  let redirectUrl = res.locals.redirectUrl || "/api/services";
   res.redirect(redirectUrl);
 };
 
@@ -41,3 +41,9 @@ module.exports.logout = (req, res, next) => {
     res.redirect("/api/services");
   });
 };
+
+// module.exports.someRoute = async (req, res) => {
+//   const currentUser = req.user;
+//   // Do something with the current user
+//   res.send(`Hello, ${currentUser}!`);
+// };
