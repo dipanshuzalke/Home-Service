@@ -20,7 +20,7 @@
   "scripts": {
     "start": "node server.js"
   },
-  "name": "Home service provider",
+  "name": "service",
   "version": "1.0.0",
   "main": "server.js",
   "keywords": [],
