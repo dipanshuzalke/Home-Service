@@ -1,4 +1,7 @@
 {
+  "engines": {
+    "node" : "21.7.3",
+  },
   "dependencies": {
     "connect-flash": "^0.1.1",
     "connect-mongo": "^5.1.0",
@@ -17,7 +20,7 @@
   "scripts": {
     "start": "node server.js"
   },
-  "name": "service",
+  "name": "Home service provider",
   "version": "1.0.0",
   "main": "server.js",
   "keywords": [],

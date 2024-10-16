@@ -15,10 +15,11 @@ const User = require("./models/User.js");
 // Load environment variables
 dotenv.config();
 
-const MONGO_URL = process.env.MONGO_URL || "mongodb://127.0.0.1:27017/homeService";
+// const MONGO_URL = process.env.MONGO_URL || "mongodb://127.0.0.1:27017/homeService";
+const dbUrl = process.env.ATLASDB_URL;
 
 async function main() {
-  await mongoose.connect(MONGO_URL);
+  await mongoose.connect(dbUrl);
   console.log("connected to DB");
 }
 
@@ -35,17 +36,21 @@ app.use(express.static(path.join(__dirname, "/public")));
 
 // MongoStore
 const store = MongoStore.create({
-  mongoUrl: MONGO_URL,
+  mongoUrl:dbUrl,
   crypto: {
-    secret: process.env.SESSION_SECRET || "mysupersecretcode",
+    secret: process.env.SESSION_SECRET,
   },
   touchAfter: 24 * 3600,  // 24 hours in sec
+});
+
+store.on("error", () => {
+  console.log('eRROR IN mongo sESSION STORE', ERR);
 });
 
 // Express Session
 const sessionOptions = {
   store,
-  secret: process.env.SESSION_SECRET || "mysupersecretcode",
+  secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: true,
   cookie: {
